@@ -64,4 +64,13 @@ public class LabelService {
             throw new RuntimeException("Failed to update Gmail label: " + id, e);
         }
     }
+    public void deleteLabel(String userId, String id) {
+        try {
+            // Execute the DELETE request via the Gmail API
+            gmailClient.users().labels().delete(userId, id).execute();
+
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to delete Gmail label: " + id, e);
+        }
+    }
 }
