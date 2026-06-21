@@ -14,6 +14,7 @@ import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.GmailScopes;
 import com.google.api.services.gmail.model.Label;
 import com.google.api.services.gmail.model.ListLabelsResponse;
+import jakarta.annotation.PostConstruct;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -46,7 +47,35 @@ public class PromevoCodingTaskBackendApplication {
 	 */
 	private static final List<String> SCOPES = Collections.singletonList(GmailScopes.GMAIL_LABELS);
 	private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
+	private Gmail gmailClient;
 
+	/**
+	 * @PostConstruct tells Spring to run this method automatically as soon as
+	 * the application starts up and creates this service.
+	 */
+	@PostConstruct
+	public void init() throws GeneralSecurityException, IOException {
+		final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+		Gmail service = new Gmail.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+				.setApplicationName(APPLICATION_NAME)
+				.build();
+		this.gmailClient = service;
+		// Print the labels in the user's account.
+		String user = "me";
+		ListLabelsResponse listResponse = service.users().labels().list(user).execute();
+		List<Label> labels = listResponse.getLabels();
+		if (labels.isEmpty()) {
+			System.out.println("No labels found.");
+		} else {
+			System.out.println("Labels:");
+			for (Label label : labels) {
+				System.out.printf("- %s\n", label.getName());
+			}
+		}
+	}
+	public Gmail getGmailClient() {
+		return this.gmailClient;
+	}
 	/**
 	 * Creates an authorized Credential object.
 	 *
@@ -75,26 +104,7 @@ public class PromevoCodingTaskBackendApplication {
 		//returns an authorized Credential object.
 		return credential;
 	}
-	public static void main(String[] args)
-		throws IOException, GeneralSecurityException {
-			// Build a new authorized API client service.
-			final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-			Gmail service = new Gmail.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
-					.setApplicationName(APPLICATION_NAME)
-					.build();
-
-			// Print the labels in the user's account.
-			String user = "me";
-			ListLabelsResponse listResponse = service.users().labels().list(user).execute();
-			List<Label> labels = listResponse.getLabels();
-			if (labels.isEmpty()) {
-				System.out.println("No labels found.");
-			} else {
-				System.out.println("Labels:");
-				for (Label label : labels) {
-					System.out.printf("- %s\n", label.getName());
-				}
-			}
+	public static void main(String[] args){
 
 		SpringApplication.run(PromevoCodingTaskBackendApplication.class, args);
 	}
