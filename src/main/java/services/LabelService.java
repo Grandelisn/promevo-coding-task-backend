@@ -2,7 +2,7 @@ package services;
 
 import com.example.promevocodingtaskbackend.PromevoCodingTaskBackendApplication;
 import com.google.api.services.gmail.Gmail;
-import models.Label;
+import com.google.api.services.gmail.model.Label;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 
@@ -18,15 +18,15 @@ public class LabelService {
     public Label createLabel(String userId, Label labelDto) {
         try {
             // Map your custom DTO to the Google API Label class
-            com.google.api.services.gmail.model.Label googleLabel = new com.google.api.services.gmail.model.Label();
+            Label googleLabel = new Label();
             googleLabel.setName(labelDto.getName());
-            googleLabel.setMessageListVisibility(labelDto.getMessageListVisibility().getValue());
-            googleLabel.setLabelListVisibility(labelDto.getLabelListVisibility().getValue());
+            googleLabel.setMessageListVisibility(labelDto.getMessageListVisibility());
+            googleLabel.setLabelListVisibility(labelDto.getLabelListVisibility());
 
             // Note: Color mapping would go here if type is USER
 
             // Execute the API call
-            com.google.api.services.gmail.model.Label createdGoogleLabel =
+            Label createdGoogleLabel =
                     gmailClient.users().labels().create(userId, googleLabel).execute();
 
             // Map the Google response back to your DTO
