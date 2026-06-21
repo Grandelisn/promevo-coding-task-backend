@@ -3,6 +3,10 @@ package services;
 import com.example.promevocodingtaskbackend.PromevoCodingTaskBackendApplication;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.model.Label;
+import com.google.api.services.gmail.model.LabelColor;
+import models.enums.LabelListVisibility;
+import models.enums.MessageListVisibility;
+import models.enums.Type;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 
@@ -14,7 +18,48 @@ public class LabelService {
     public LabelService(PromevoCodingTaskBackendApplication gmailService) {
         this.gmailClient = gmailService.getGmailClient();
     }
+    public Label getLabel(String userId, String id) {
+        try {
+            // Execute the GET request via the Gmail API
+            Label googleLabel =
+                    gmailClient.users().labels().get(userId, id).execute();
 
+            // Map the official Google API model back to your DTO
+            Label labelDto = new Label();
+            labelDto.setId(googleLabel.getId());
+            labelDto.setName(googleLabel.getName());
+
+            // Handle Enums (Ensure null checks if these aren't guaranteed on every label)
+            if (googleLabel.getMessageListVisibility() != null) {
+                labelDto.setMessageListVisibility(String.valueOf(MessageListVisibility.valueOf(googleLabel.getMessageListVisibility().toUpperCase())));
+            }
+            if (googleLabel.getLabelListVisibility() != null) {
+                labelDto.setLabelListVisibility(String.valueOf(LabelListVisibility.valueOf(googleLabel.getLabelListVisibility().replaceAll("([a-z])([A-Z]+)", "$1_$2").toUpperCase())));
+            }
+            if (googleLabel.getType() != null) {
+                labelDto.setType(String.valueOf(Type.valueOf(googleLabel.getType().toUpperCase())));
+            }
+
+            // Map standard integer fields
+            labelDto.setMessagesTotal(googleLabel.getMessagesTotal());
+            labelDto.setMessagesUnread(googleLabel.getMessagesUnread());
+            labelDto.setThreadsTotal(googleLabel.getThreadsTotal());
+            labelDto.setThreadsUnread(googleLabel.getThreadsUnread());
+
+            // Map color if present
+            if (googleLabel.getColor() != null) {
+                LabelColor colorDto = new LabelColor();
+                colorDto.setTextColor(googleLabel.getColor().getTextColor());
+                colorDto.setBackgroundColor(googleLabel.getColor().getBackgroundColor());
+                labelDto.setColor(colorDto);
+            }
+
+            return labelDto;
+
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to retrieve Gmail label: " + id, e);
+        }
+    }
     public Label createLabel(String userId, Label labelDto) {
         try {
             // Map your custom DTO to the Google API Label class
