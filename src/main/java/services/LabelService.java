@@ -4,11 +4,13 @@ import com.example.promevocodingtaskbackend.PromevoCodingTaskBackendApplication;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.model.Label;
 import com.google.api.services.gmail.model.LabelColor;
+import com.google.api.services.gmail.model.ListLabelsResponse;
 import models.enums.LabelListVisibility;
 import models.enums.MessageListVisibility;
 import models.enums.Type;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
+import java.util.List;
 
 @Service
 public class LabelService {
@@ -116,6 +118,24 @@ public class LabelService {
 
         } catch (IOException e) {
             throw new RuntimeException("Failed to delete Gmail label: " + id, e);
+        }
+    }
+    public ListLabelsResponse listLabels(String userId) {
+        try {
+            // Execute the GET request via the Gmail API
+            ListLabelsResponse googleResponse =
+                    gmailClient.users().labels().list(userId).execute();
+
+            // Check for null to avoid NullPointerExceptions if the user has no labels
+            List<Label> googleLabels = googleResponse.getLabels();
+            if (googleLabels == null || googleLabels.isEmpty()) {
+                return new ListLabelsResponse();
+            }
+
+            return googleResponse;
+
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to list Gmail labels for user: " + userId, e);
         }
     }
 }
