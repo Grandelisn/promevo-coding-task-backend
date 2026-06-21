@@ -37,4 +37,31 @@ public class LabelService {
             throw new RuntimeException("Failed to create Gmail label", e);
         }
     }
+    public Label updateLabel(String userId, String id, Label labelDto) {
+        try {
+            // Map your DTO to the official Google API Label model
+            Label googleLabel = new Label();
+
+            // The ID must be set on the payload for the update operation
+            googleLabel.setId(id);
+            googleLabel.setName(labelDto.getName());
+
+            if (labelDto.getMessageListVisibility() != null) {
+                googleLabel.setMessageListVisibility(labelDto.getMessageListVisibility());
+            }
+            if (labelDto.getLabelListVisibility() != null) {
+                googleLabel.setLabelListVisibility(labelDto.getLabelListVisibility());
+            }
+
+            // Execute the PUT request via the Gmail API
+            Label updated =
+                    gmailClient.users().labels().update(userId, id, googleLabel).execute();
+
+            // Return the updated state
+            return labelDto;
+
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to update Gmail label: " + id, e);
+        }
+    }
 }
