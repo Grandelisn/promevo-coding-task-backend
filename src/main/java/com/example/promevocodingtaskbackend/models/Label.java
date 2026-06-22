@@ -1,10 +1,10 @@
-package models;
+package com.example.promevocodingtaskbackend.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import models.enums.LabelListVisibility;
-import models.enums.MessageListVisibility;
-import models.enums.Type;
+import com.example.promevocodingtaskbackend.models.enums.LabelListVisibility;
+import com.example.promevocodingtaskbackend.models.enums.MessageListVisibility;
+import com.example.promevocodingtaskbackend.models.enums.Type;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Label {

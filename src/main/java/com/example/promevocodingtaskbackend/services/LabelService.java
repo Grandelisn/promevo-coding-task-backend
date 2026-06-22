@@ -1,13 +1,13 @@
-package services;
+package com.example.promevocodingtaskbackend.services;
 
 import com.example.promevocodingtaskbackend.PromevoCodingTaskBackendApplication;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.model.Label;
 import com.google.api.services.gmail.model.LabelColor;
 import com.google.api.services.gmail.model.ListLabelsResponse;
-import models.enums.LabelListVisibility;
-import models.enums.MessageListVisibility;
-import models.enums.Type;
+import com.example.promevocodingtaskbackend.models.enums.LabelListVisibility;
+import com.example.promevocodingtaskbackend.models.enums.MessageListVisibility;
+import com.example.promevocodingtaskbackend.models.enums.Type;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.List;
