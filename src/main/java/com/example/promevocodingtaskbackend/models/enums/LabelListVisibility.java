@@ -1,4 +1,4 @@
-package models.enums;
+package com.example.promevocodingtaskbackend.models.enums;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 

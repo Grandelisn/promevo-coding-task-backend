@@ -1,13 +1,13 @@
-package models;
+package com.example.promevocodingtaskbackend.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import models.enums.LabelListVisibility;
-import models.enums.MessageListVisibility;
-import models.enums.Type;
+import com.example.promevocodingtaskbackend.models.enums.LabelListVisibility;
+import com.example.promevocodingtaskbackend.models.enums.MessageListVisibility;
+import com.example.promevocodingtaskbackend.models.enums.Type;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Label {
+public class LabelDTO {
 
     @JsonProperty("id")
     private String id;
@@ -37,10 +37,9 @@ public class Label {
     private Integer threadsUnread;
 
     @JsonProperty("color")
-    private Color color;
+    private ColorDTO color;
 
-    // Default constructor for Jackson
-    public Label() {}
+    public LabelDTO() {}
 
     public String getId() {
         return id;
@@ -114,11 +113,11 @@ public class Label {
         this.threadsUnread = threadsUnread;
     }
 
-    public Color getColor() {
+    public ColorDTO getColor() {
         return color;
     }
 
-    public void setColor(Color color) {
+    public void setColor(ColorDTO color) {
         this.color = color;
     }
 }

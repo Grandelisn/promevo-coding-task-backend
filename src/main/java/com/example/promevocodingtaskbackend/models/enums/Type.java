@@ -1,14 +1,14 @@
-package models.enums;
+package com.example.promevocodingtaskbackend.models.enums;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum MessageListVisibility {
-    SHOW("show"),
-    HIDE("hide");
+public enum Type {
+    SYSTEM("system"),
+    USER("user");
 
     private final String value;
 
-    MessageListVisibility(String value) {
+    Type(String value) {
         this.value = value;
     }
 
