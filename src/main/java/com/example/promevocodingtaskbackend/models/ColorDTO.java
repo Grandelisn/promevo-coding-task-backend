@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Color {
+public class ColorDTO {
 
     @JsonProperty("textColor")
     private String textColor;
@@ -13,9 +13,9 @@ public class Color {
     private String backgroundColor;
 
     // Default constructor for Jackson
-    public Color() {}
+    public ColorDTO() {}
 
-    public Color(String textColor, String backgroundColor) {
+    public ColorDTO(String textColor, String backgroundColor) {
         this.textColor = textColor;
         this.backgroundColor = backgroundColor;
     }

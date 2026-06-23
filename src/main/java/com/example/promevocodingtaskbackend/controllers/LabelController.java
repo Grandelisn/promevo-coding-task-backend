@@ -1,5 +1,6 @@
 package com.example.promevocodingtaskbackend.controllers;
 
+import com.example.promevocodingtaskbackend.models.LabelDTO;
 import com.google.api.services.gmail.model.Label;
 import com.google.api.services.gmail.model.ListLabelsResponse;
 import org.springframework.http.HttpStatus;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import com.example.promevocodingtaskbackend.services.LabelService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173/")
 @RequestMapping("/api/v1/users/{userId}/labels")
 public class LabelController {
 
@@ -26,12 +28,12 @@ public class LabelController {
      * @return A ResponseEntity containing the newly created Label and a 201 CREATED status.
      */
     @PostMapping
-    public ResponseEntity<Label> createLabel(
+    public ResponseEntity<LabelDTO> createLabel(
             @PathVariable String userId,
-            @RequestBody Label label) {
+            @RequestBody LabelDTO label) {
 
         // Delegate the actual Gmail API execution to the Service layer
-        Label createdLabel = labelService.createLabel(userId, label);
+        LabelDTO createdLabel = labelService.createLabel(userId, label);
 
         return new ResponseEntity<>(createdLabel, HttpStatus.CREATED);
     }

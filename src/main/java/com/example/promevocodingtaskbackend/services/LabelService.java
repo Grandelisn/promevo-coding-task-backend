@@ -1,6 +1,7 @@
 package com.example.promevocodingtaskbackend.services;
 
 import com.example.promevocodingtaskbackend.PromevoCodingTaskBackendApplication;
+import com.example.promevocodingtaskbackend.models.LabelDTO;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.model.Label;
 import com.google.api.services.gmail.model.LabelColor;
@@ -62,13 +63,13 @@ public class LabelService {
             throw new RuntimeException("Failed to retrieve Gmail label: " + id, e);
         }
     }
-    public Label createLabel(String userId, Label labelDto) {
+    public LabelDTO createLabel(String userId, LabelDTO labelDto) {
         try {
             // Map your custom DTO to the Google API Label class
             Label googleLabel = new Label();
             googleLabel.setName(labelDto.getName());
-            googleLabel.setMessageListVisibility(labelDto.getMessageListVisibility());
-            googleLabel.setLabelListVisibility(labelDto.getLabelListVisibility());
+            googleLabel.setMessageListVisibility(labelDto.getMessageListVisibility().getValue());
+            googleLabel.setLabelListVisibility(labelDto.getLabelListVisibility().getValue());
 
             // Note: Color mapping would go here if type is USER
 
