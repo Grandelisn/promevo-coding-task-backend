@@ -39,7 +39,6 @@ public class LabelDTO {
     @JsonProperty("color")
     private ColorDTO color;
 
-    // Default constructor for Jackson
     public LabelDTO() {}
 
     public String getId() {

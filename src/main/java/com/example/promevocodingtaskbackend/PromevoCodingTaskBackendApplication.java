@@ -28,31 +28,15 @@ import java.util.List;
 
 @SpringBootApplication
 public class PromevoCodingTaskBackendApplication {
-	/**
-	 * Application name.
-	 */
-	private static final String APPLICATION_NAME = "Gmail API Java Quickstart";
-	/**
-	 * Global instance of the JSON factory.
-	 */
-	private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
-	/**
-	 * Directory to store authorization tokens for this application.
-	 */
-	private static final String TOKENS_DIRECTORY_PATH = "tokens";
 
-	/**
-	 * Global instance of the scopes required by this quickstart.
-	 * If modifying these scopes, delete your previously saved tokens/ folder.
-	 */
+	private static final String APPLICATION_NAME = "Gmail API Java Quickstart";
+	private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
+	private static final String TOKENS_DIRECTORY_PATH = "tokens";
 	private static final List<String> SCOPES = Collections.singletonList(GmailScopes.GMAIL_LABELS);
 	private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
 	private Gmail gmailClient;
 
-	/**
-	 * @PostConstruct tells Spring to run this method automatically as soon as
-	 * the application starts up and creates this service.
-	 */
+
 	@PostConstruct
 	public void init() throws GeneralSecurityException, IOException {
 		final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
@@ -60,7 +44,6 @@ public class PromevoCodingTaskBackendApplication {
 				.setApplicationName(APPLICATION_NAME)
 				.build();
 		this.gmailClient = service;
-		// Print the labels in the user's account.
 		String user = "me";
 		ListLabelsResponse listResponse = service.users().labels().list(user).execute();
 		List<Label> labels = listResponse.getLabels();
@@ -76,16 +59,9 @@ public class PromevoCodingTaskBackendApplication {
 	public Gmail getGmailClient() {
 		return this.gmailClient;
 	}
-	/**
-	 * Creates an authorized Credential object.
-	 *
-	 * @param HTTP_TRANSPORT The network HTTP Transport.
-	 * @return An authorized Credential object.
-	 * @throws IOException If the credentials.json file cannot be found.
-	 */
+
 	private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT)
 			throws IOException {
-		// Load client secrets.
 		InputStream in = PromevoCodingTaskBackendApplication.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
 		if (in == null) {
 			throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
@@ -93,16 +69,13 @@ public class PromevoCodingTaskBackendApplication {
 		GoogleClientSecrets clientSecrets =
 				GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
 
-		// Build flow and trigger user authorization request.
 		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
 				HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
 				.setDataStoreFactory(new FileDataStoreFactory(new java.io.File(TOKENS_DIRECTORY_PATH)))
 				.setAccessType("offline")
 				.build();
 		LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
-		Credential credential = new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
-		//returns an authorized Credential object.
-		return credential;
+        return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
 	}
 	public static void main(String[] args){
 

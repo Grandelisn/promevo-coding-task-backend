@@ -12,7 +12,6 @@ public class ColorDTO {
     @JsonProperty("backgroundColor")
     private String backgroundColor;
 
-    // Default constructor for Jackson
     public ColorDTO() {}
 
     public ColorDTO(String textColor, String backgroundColor) {
