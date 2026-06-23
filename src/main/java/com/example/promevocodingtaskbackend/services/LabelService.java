@@ -2,6 +2,7 @@ package com.example.promevocodingtaskbackend.services;
 
 import com.example.promevocodingtaskbackend.PromevoCodingTaskBackendApplication;
 import com.example.promevocodingtaskbackend.models.LabelDTO;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.model.Label;
 import com.google.api.services.gmail.model.LabelColor;
@@ -9,6 +10,7 @@ import com.google.api.services.gmail.model.ListLabelsResponse;
 import com.example.promevocodingtaskbackend.models.enums.LabelListVisibility;
 import com.example.promevocodingtaskbackend.models.enums.MessageListVisibility;
 import com.example.promevocodingtaskbackend.models.enums.Type;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.List;
@@ -59,11 +61,17 @@ public class LabelService {
 
             return labelDto;
 
+        } catch (GoogleJsonResponseException e) {
+            if (e.getStatusCode() == 404) {
+                return null;
+            }
+            throw new RuntimeException("Gmail API returned an error for label " + id + ": " + e.getDetails().getMessage(), e);
+
         } catch (IOException e) {
             throw new RuntimeException("Failed to retrieve Gmail label: " + id, e);
         }
     }
-    public LabelDTO createLabel(String userId, LabelDTO labelDto) {
+    public LabelDTO createLabel(String userId, @NonNull LabelDTO labelDto) {
         try {
             // Map your custom DTO to the Google API Label class
             Label googleLabel = new Label();
@@ -85,7 +93,7 @@ public class LabelService {
             throw new RuntimeException("Failed to create Gmail label", e);
         }
     }
-    public Label updateLabel(String userId, String id, Label labelDto) {
+    public Label updateLabel(String userId, String id, @NonNull Label labelDto) {
         try {
             // Map your DTO to the official Google API Label model
             Label googleLabel = new Label();

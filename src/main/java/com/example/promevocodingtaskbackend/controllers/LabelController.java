@@ -51,7 +51,9 @@ public class LabelController {
 
         // Delegate the retrieval logic to the Service layer
         Label retrievedLabel = labelService.getLabel(userId, id);
-
+        if (retrievedLabel == null) {
+            return ResponseEntity.notFound().build();
+        }
         // Return 200 OK with the label payload
         return ResponseEntity.ok(retrievedLabel);
     }
@@ -66,7 +68,10 @@ public class LabelController {
             @PathVariable String userId) {
         // Delegate the retrieval of the label list to the Service layer
         ListLabelsResponse response = labelService.listLabels(userId);
-
+        // Check if the response is null, or if the underlying list is empty
+        if (response == null || response.getLabels() == null || response.getLabels().isEmpty()) {
+            return ResponseEntity.noContent().build(); // Returns a 204
+        }
         // Return 200 OK with the wrapper payload
         return ResponseEntity.ok(response);
     }
